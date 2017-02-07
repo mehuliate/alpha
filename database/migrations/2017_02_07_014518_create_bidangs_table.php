@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSeksisTable extends Migration
+class CreateBidangsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateSeksisTable extends Migration
      */
     public function up()
     {
-        Schema::create('seksis', function (Blueprint $table) {
+        Schema::create('bidangs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('bagian_id');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ class CreateSeksisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('seksis');
+        Schema::dropIfExists('bidangs');
     }
 }

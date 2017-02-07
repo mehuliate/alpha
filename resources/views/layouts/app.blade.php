@@ -86,18 +86,25 @@
     <script src="{{asset('js/jquery-3.1.1.min.js')}}"></script>
     <script src="{{asset('js/selectize.min.js')}}"></script>
     {{-- <script src="/js/app.js"></script> --}}
-    <script>
-        $('#lokasi').selectize({
-            persist: false,
-            createOnBlur: true,
-            create: true
-        });
-
-        $('#seksi').selectize({
+    <script src="{{asset('js/customs.js')}}"></script>
+{{--     <script>
+        $('.js-selectize').selectize({
             persist: false,
             createOnBlur: true,
             create: true
         });
     </script>
+<script>
+$(document).ready(function(){
+    $('#add').click(function(e){
+        // event.preventDefault()
+        $('#items').append('<div><div class="form-group"><div class="col-md-8 col-md-offset-2"><input id="softwear" type="text" class="form-control" name="softwear[]" autofocus></div><button type="button" class="btn btn-danger" id="delete">hapus</button></div></div>');
+    });
+
+    $('body').on('click', '#delete', function(e){
+        $(this).parent('div').remove();
+    });
+});
+</script> --}}
 </body>
 </html>
