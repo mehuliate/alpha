@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Duktek;
+use App\DataComputer;
+use App\DataSoftwear;
 use Illuminate\Http\Request;
 
 class DuktekController extends Controller
@@ -86,6 +88,7 @@ class DuktekController extends Controller
     public function rekamip(Request $request)
     {
         $userAgentData = $_SERVER['HTTP_USER_AGENT'];
+
         $operatingSystem     =   $this->getOS($userAgentData);
         $osBrowser    =   $this->getBrowser($userAgentData);
         //get ip, hostname, mac address
@@ -95,20 +98,88 @@ class DuktekController extends Controller
         //get host name
         $hostname = gethostbyaddr($ipAddress);
 
-        $data=[
-            'ip' => $ipAddress,
-            'hostName' => $hostname,
-            'macAddress' => $macAddress,
-            'operatingSystem' => $operatingSystem,
-            'userAgentData' => $userAgentData
-        ];
+        //cek ip sudah ada
+        $data = DataComputer::where('ip_address', $ipAddress)->first();
+        // dd($data);
 
-        return view('duktek.ip', compact('data'));
+        if($data == null )
+        {
+            $data=[
+                'ip' => $ipAddress,
+                'hostName' => $hostname,
+                'macAddress' => $macAddress,
+                'operatingSystem' => $operatingSystem,
+                'userAgentData' => $userAgentData
+            ];
+
+            return view('duktek.ip', compact('data'));            
+        } else {
+            $data2 = DataSoftwear::where('ip_address', $data->ip_address)->get();
+            // return view('duktek.ipupdate', compact('data', 'data2'));
+            return '<h1>Data Komputer sudah diUpdate</h1>';
+        }
     }
 
     public function storeip(Request $request)
     {
-        dd($request->all());
+        $this->validate($request, [
+            'ip_address' => 'required',
+            'host_name' => 'required',
+            'mac_address' => 'required',
+            'operating_system' => 'required',
+            'lokasi' => 'required',
+            'bidang' => 'required',
+            'seksi' => 'required',
+            'tugas_pengguna' => 'required',
+        ]);
+
+        $computer = DataComputer::create($request->all());
+
+        if($request->get('softwear'))
+        {
+            foreach ($request->get('softwear') as $key => $value) {
+                $softwear = new DataSoftwear;
+                $softwear->data_computer_id = $computer->id;
+                $softwear->ip_address = $computer->ip_address;
+                $softwear->softwear = $value;
+                $softwear->save();
+            };
+        };
+        return redirect()->route('ip');
+    }
+
+    public function updateip(Request $request, $dataip)
+    {
+        $this->validate($request, [
+            'ip_address' => 'required',
+            'host_name' => 'required',
+            'mac_address' => 'required',
+            'operating_system' => 'required',
+            'lokasi' => 'required',
+            'bidang' => 'required',
+            'seksi' => 'required',
+            'tugas_pengguna' => 'required',
+        ]);
+
+        $computer = DataComputer::where('ip_address', $dataip)->first();
+        $com2 = DataSoftwear::destroy($computer->ip_address);
+        $computer->update($request->all());
+
+        if($request->get('softwear'))
+        {
+            foreach ($request->get('softwear') as $key => $value) {
+                $softwear = new DataSoftwear;
+                $softwear->data_computer_id = $computer->id;
+                $softwear->ip_address = $computer->ip_address;
+                $softwear->softwear = $value;
+                $softwear->save();
+            };
+        };
+
+
+
+
+        return 'data sudah diupdate';
     }
 
     public function get_client_ip()

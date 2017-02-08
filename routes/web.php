@@ -20,3 +20,4 @@ Auth::routes();
 Route::get('/home', 'HomeController@index');
 Route::get('/ip', 'DuktekController@rekamip')->name('ip');
 Route::post('/ipstore', 'DuktekController@storeip')->name('storeip');
+Route::post('/ipupdate/{dataip}', 'DuktekController@updateip')->name('updateip');
