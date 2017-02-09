@@ -19,11 +19,11 @@ class CreateDataComputersTable extends Migration
             $table->string('host_name');
             $table->string('mac_address');
             $table->string('operating_system');
-            $table->string('user_agent');
             $table->string('lokasi');
             $table->string('bidang');
             $table->string('seksi');
             $table->string('tugas_pengguna');
+            $table->string('user_agent');
             $table->timestamps();
         });
     }
